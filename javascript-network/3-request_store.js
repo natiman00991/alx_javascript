@@ -2,7 +2,7 @@ const request = require("request");
 const fs = require("fs");
 
 const url = process.argv[2]; // Get the URL from the command line arguments
-const filePath = process.argv[3]; // Get the file path to store the response
+const filePath = process.argv[3]; // Get the file path to store the body response
 
 request(url, (error, response, body) => {
   if (error) {
