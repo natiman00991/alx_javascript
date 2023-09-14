@@ -1,7 +1,7 @@
 const request = require("request");
 
-const movieId = process.argv[2]; // Get the movie ID from the command line arguments
-const apiUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}`;
+const apiUrl = process.argv[2]; // Get the API URL from the command line arguments
+const characterId = 18; // Character ID for Wedge Antilles
 
 request(apiUrl, (error, response, body) => {
   if (error) {
@@ -15,9 +15,15 @@ request(apiUrl, (error, response, body) => {
   }
 
   try {
-    const movieData = JSON.parse(body);
-    const movieTitle = movieData.title;
-    console.log(movieTitle);
+    const filmData = JSON.parse(body);
+    const filmsWithWedgeAntilles = filmData.results.filter((film) => {
+      return film.characters.includes(
+        `https://swapi-api.alx-tools.com/api/people/${characterId}/`
+      );
+    });
+
+    const count = filmsWithWedgeAntilles.length;
+    console.log(count);
   } catch (parseError) {
     console.error(`Error parsing JSON response: ${parseError.message}`);
   }
