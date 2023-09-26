@@ -1,22 +1,31 @@
 const request = require("request");
 const fs = require("fs");
 
-const url = process.argv[2]; // Get the URL from the command line arguments
-const filePath = process.argv[3]; // Get the file path to store the response
+const url = process.argv[2];
+const filePath = process.argv[3];
 
-// Make a GET request to the specified URL
+if (!url || !filePath) {
+  console.error("Usage: node 3-request_store.js <URL> <file-path>");
+  process.exit(1);
+}
+
 request(url, (error, response, body) => {
   if (error) {
-    console.error(`Error making the request: ${error.message}`);
-    return;
+    console.error("Error:", error);
+    process.exit(1);
   }
 
   if (response.statusCode !== 200) {
-    console.error(`Request failed with status code ${response.statusCode}`);
-    return;
+    console.error("Failed to retrieve data. Status code:", response.statusCode);
+    process.exit(1);
   }
 
-  // Write the body of the response to the specified file
-  fs.writeFileSync(filePath, body, "utf-8");
-  console.log(`Response saved to ${filePath}`);
+  fs.writeFile(filePath, body, { encoding: "utf-8" }, (err) => {
+    if (err) {
+      console.error("Error writing to file:", err);
+      process.exit(1);
+    }
+
+    console.log(`Data from ${url} has been saved to ${filePath}`);
+  });
 });
